@@ -25,6 +25,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+/**
+ * Starts the simulator, parses command-line flags, selects an
+ * {@link com.cardio_generator.outputs.OutputStrategy}, and schedules every
+ * data generator at a fixed rate.
+ */
 public class HealthDataSimulator {
 
     private static int patientCount = 50; // Default number of patients
@@ -32,6 +37,12 @@ public class HealthDataSimulator {
     private static OutputStrategy outputStrategy = new ConsoleOutputStrategy(); // Default output strategy
     private static final Random random = new Random();
 
+    /**
+     * Program entry-point.
+     *
+     * @param args command-line flags (see class-level Javadoc)
+     * @throws IOException if file output directory cannot be created
+     */
     public static void main(String[] args) throws IOException {
 
         parseArguments(args);
@@ -44,6 +55,12 @@ public class HealthDataSimulator {
         scheduleTasksForPatients(patientIds);
     }
 
+    /**
+     * Parse CLI flags and update {@code patientCount} / {@code outputStrategy}.
+     *
+     * @param args raw {@code main(String[])} arguments
+     * @throws IOException when {@code --output file:<dir>} cannot create directory
+     */
     private static void parseArguments(String[] args) throws IOException {
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
@@ -130,6 +147,11 @@ public class HealthDataSimulator {
         return patientIds;
     }
 
+    /**
+     * Register every generator task for every patient.
+     *
+     * @param patientIds shuffled list of IDs
+     */
     private static void scheduleTasksForPatients(List<Integer> patientIds) {
         ECGDataGenerator ecgDataGenerator = new ECGDataGenerator(patientCount);
         BloodSaturationDataGenerator bloodSaturationDataGenerator = new BloodSaturationDataGenerator(patientCount);
@@ -146,6 +168,13 @@ public class HealthDataSimulator {
         }
     }
 
+     /**
+     * Convenience wrapper around {@link ScheduledExecutorService#scheduleAtFixedRate}.
+     *
+     * @param task   runnable to execute
+     * @param period period between executions
+     * @param unit   time unit for {@code period}
+     */
     private static void scheduleTask(Runnable task, long period, TimeUnit timeUnit) {
         scheduler.scheduleAtFixedRate(task, random.nextInt(5), period, timeUnit);
     }

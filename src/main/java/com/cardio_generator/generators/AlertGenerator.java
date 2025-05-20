@@ -4,6 +4,15 @@ import java.util.Random;
 
 import com.cardio_generator.outputs.OutputStrategy;
 
+/**
+ * Simulates random alert / resolve events for every patient.
+ *
+ * An “alert” is triggered following a Poisson process with rate lambda.
+ * Once an alert is active, each tick has a fixed probability of resolving it.
+ *
+ * The class keeps one boolean per patient that records the current alert state.
+ */
+
 public class AlertGenerator implements PatientDataGenerator {
 
     // Changed constant name to UPPER_CASE to follow Google style

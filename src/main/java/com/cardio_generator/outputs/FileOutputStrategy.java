@@ -7,6 +7,12 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Writes each measurement type to its own text file under a base directory.
+ *
+ * Thread-safe: a {@link ConcurrentHashMap} is used so that multiple generator
+ * threads can log simultaneously.
+ */
 public class FileOutputStrategy implements OutputStrategy {
 
     // Changed field name to lowerCamelCase and marked final (immutable after construction)

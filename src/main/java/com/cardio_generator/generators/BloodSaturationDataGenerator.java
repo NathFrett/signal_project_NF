@@ -4,10 +4,21 @@ import java.util.Random;
 
 import com.cardio_generator.outputs.OutputStrategy;
 
+/**
+ * Generates realistic SpO(2) (blood-oxygen saturation) values for each patient.
+ * Every call to {@link #generate(int, OutputStrategy)} nudges the previous
+ * saturation value up or down by +-1 % and clamps it to a safe range [90, 100].
+ *
+ * Thread-safety: one instance per scheduled task, therefore no synchronisation
+ * is required (all state is private to the generator).
+ */
+
 public class BloodSaturationDataGenerator implements PatientDataGenerator {
     private static final Random random = new Random();
+    // Last emitted saturation level for every patient (index 0 unused).
     private int[] lastSaturationValues;
 
+    // @param patientCount highest patient ID that will ever be generated
     public BloodSaturationDataGenerator(int patientCount) {
         lastSaturationValues = new int[patientCount + 1];
 
@@ -17,6 +28,12 @@ public class BloodSaturationDataGenerator implements PatientDataGenerator {
         }
     }
 
+    /**
+     * Simulate a new SpO(2) value and forward it to the output layer.
+     *
+     * @param patientId      1-based patient identifier
+     * @param outputStrategy output target
+     */
     @Override
     public void generate(int patientId, OutputStrategy outputStrategy) {
         try {
