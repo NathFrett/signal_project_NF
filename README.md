@@ -67,3 +67,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Project Members
 
 - Student ID = 6314906
+
+## UML Class Diagrams
+The four subsystem diagrams and their explanations are located in the
+[`uml_models`](./uml_models) directory.
